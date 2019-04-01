@@ -29,14 +29,35 @@ class Car():
                 new = True        
         return new
 
+def menu():
+    print('A. To print details')
+    print('B. To check if you need a new car')
+    print('X. To exit')
+    choice = input('Enter option: ')
+    return choice
 
-car1 = Car('BL57 WFR', 'toyota')
-car1.setInspectionData(5000, '03/07/18')
-print('Your registration is: ',car1.getRegistration())
-print('Your make is: ',car1.getMake())
-print('Your mileage is: ',car1.getMileage())
-print('Your date of inspection is: ',car1.getDateOfInspection())
-if car1.needNewCar() == True:
-    print('You need a new car')
-else:
-    print('Your car is fine :)')
+def details(car):
+    print('Your registration is: ',car.getRegistration())
+    print('Your make is: ',car.getMake())
+    print('Your mileage is: ',car.getMileage())
+    print('Your date of inspection is: ',car.getDateOfInspection())
+    
+def main():
+    car1 = Car('BL57 WFR', 'toyota')
+    car1.setInspectionData(5000, '03/07/18')
+    option = menu()
+    while option != 'X':
+        if option == 'A':
+            details(car1)
+        if option == 'B':
+            if car1.needNewCar() == True:
+                print('You need a new car')
+            else:
+                print('Your car is fine :)')
+        print()
+        option = menu()
+    print('goodbye')
+            
+main ()
+
+
