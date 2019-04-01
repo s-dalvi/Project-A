@@ -27,8 +27,16 @@ class Car():
     def needNewCar(self):
         if self.__year__[0] == '5' or self.__year__[0] == '6':
             self.__year__= int(self.__year__)-50
-        if int(self.__year__)< 17:
+        if int(self.__year__)< 14:
             return True
+
+    def yearsLeft(self):
+        numYears = 0
+        if (19-int(self.__year__))<5:
+            fiveYears = int(self.__year__)+5
+            numYears = (fiveYears-19)
+        return numYears
+            
 
 def menu():
     print('A. To print details')
@@ -44,7 +52,7 @@ def details(car):
     print('Your date of inspection is: ',car.getDateOfInspection())
     
 def main():
-    car1 = Car('BL67 WFR', 'toyota')
+    car1 = Car('BL14 WFR', 'toyota aygo')
     car1.setInspectionData(5000, '03/07/18')
     option = menu()
     while option != 'X':
@@ -55,6 +63,8 @@ def main():
                 print('You need a new car')
             else:
                 print('Your car is fine :)')
+                remainingYrs = car1.yearsLeft()
+                print('You have',remainingYrs,'years remaining')
         print()
         option = menu()
     print('goodbye')
