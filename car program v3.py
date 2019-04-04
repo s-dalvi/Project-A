@@ -4,9 +4,14 @@ class Car():
         self.__registration__ = registration
         self.__make__ = make
         self.__dateOfInspection__ = None
-        self.__year__ = (str(self.__registration__[2] + self.__registration__[3]))
+        self.__year__ = str((self.__registration__[2] + self.__registration__[3]))
 
 
+    def getYear(self):
+        if self.__year__[0] == '5' or self.__year__[0] == '6':
+            self.__year__= int(self.__year__)-50
+        return self.__year__
+        
     def getRegistration(self):
         return self.__registration__
  
@@ -25,46 +30,94 @@ class Car():
 
 
     def needNewCar(self):
-        if self.__year__[0] == '5' or self.__year__[0] == '6':
-            self.__year__= int(self.__year__)-50
+        self.getYear()
         if int(self.__year__)< 14:
             return True
-
-    def yearsLeft(self):
-        numYears = 0
-        if (19-int(self.__year__))<5:
-            fiveYears = int(self.__year__)+5
-            numYears = (fiveYears-19)
-        return numYears
+        else:
+            return (19-int(self.__year__))
             
 
 def menu():
-    print('A. To print details')
-    print('B. To check if you need a new car')
-    print('X. To exit')
+    print('1. To input new car details')
+    print('2. To print details')
+    print('3. To check if you need a new car')
+    print('4. To view all cars')
+    print('0. To exit')
+    print()
     choice = input('Enter option: ')
+    while True:
+        try:
+            choice = int(choice)
+            break
+        except ValueError:
+            print('\nPlease enter a valid option')
+            choice = input()
     return choice
 
-def details(car):
-    print('Your registration is: ',car.getRegistration())
-    print('Your make is: ',car.getMake())
-    print('Your mileage is: ',car.getMileage())
-    print('Your date of inspection is: ',car.getDateOfInspection())
+def details(cars):
+    print()
+    allCars(cars)
+    print()
+    car = input('Which car do you want to check? ')
+    try:
+        car=cars.get(int(car))
+    except ValueError:
+        car=cars.get(car)
+    while True:
+        try:
+            print('\nYour registration is: ',car.getRegistration())
+            print('Your make is: ',car.getMake())
+            print('Your mileage is: ',car.getMileage())
+            print('Your date of inspection is: ',car.getDateOfInspection())
+            break
+        except AttributeError as e:
+            #print(e)
+            print('\nPlease enter a valid car name from the list below')
+            allCars(cars)
+            car = input()
+            car = cars.get(car)
+
+def allCars(cars):
+    for key,value in cars.items():
+        print(key ,':' ,value.getMake(),',',value.getRegistration())
+    print()
+                
+    
+
+def addCar():
+    reg = input('Enter reg: ')
+    name = input('Enter name: ')
+    newCar = Car(reg,name)
+    inspData = input('Set inspection data?Y or N ')
+    if inspData == 'Y':
+        miles = input('Enter no. of miles: ' )
+        date = input('Enter date of inspection: ')
+        newCar.setInspectionData(miles,date)
+                  
+    return name, newCar
     
 def main():
-    car1 = Car('BL14 WFR', 'toyota aygo')
+    cars = 0
+    car1 = Car('BL17 WFR', 'toyota aygo')
     car1.setInspectionData(5000, '03/07/18')
+    carDict = {'default':car1}
+
     option = menu()
-    while option != 'X':
-        if option == 'A':
-            details(car1)
-        if option == 'B':
+    while option != 0:
+        if option ==1:
+            name, newCar= addCar()
+            cars +=1
+            carDict.update({cars: newCar})
+        if option == 2:
+            details(carDict)
+        if option == 3:
             if car1.needNewCar() == True:
                 print('You need a new car')
             else:
-                print('Your car is fine :)')
-                remainingYrs = car1.yearsLeft()
-                print('You have',remainingYrs,'years remaining')
+                remainingYrs = car1.needNewCar()
+                print('Your car is fine: You have',remainingYrs,'years remaining')
+        if option == 4:
+            allCars(carDict)
         print()
         option = menu()
     print('goodbye')
